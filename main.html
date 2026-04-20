@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avtomobil Buyurtma Formasi</title>
+    <style>
+        body { font-family: Arial; max-width: 600px; margin: 40px auto; padding: 20px; }
+        label { display: block; margin: 15px 0 5px; }
+        output { font-weight: bold; font-size: 1.2em; color: #d00; }
+    </style>
+</head>
+<body>
+    <form id="carForm">
+        <h1>Avtomobil Tanlash</h1>
+        
+        <label for="model">Model tanlang:</label>
+        <input list="models" id="model" name="model" required>
+        <datalist id="models">
+            <option value="Tesla Model 3">
+            <option value="BMW X5">
+            <option value="Toyota Camry">
+            <option value="Mercedes S-Class">
+        </datalist>
+
+        <label for="color">Rang tanlang: <input type="color" id="color" value="#000000"></label>
+
+        <label for="quantity">Soni: <input type="range" id="quantity" min="1" max="10" value="1" oninput="calculatePrice()"></label>
+        <span id="qtyValue">1</span>
+
+        <label for="extras">Qo‘shimcha xizmatlar (checkbox):</label>
+        <input type="checkbox" id="insurance" onchange="calculatePrice()"> Sug‘urta (+500$)<br>
+        <input type="checkbox" id="delivery" onchange="calculatePrice()"> Yetkazib berish (+200$)
+
+        <h2>Jami narx: <output id="total" name="total">0</output> $</h2>
+
+        <button type="submit">Buyurtma berish</button>
+    </form>
+
+    <script>
+        function calculatePrice() {
+            let basePrice = 0;
+            const model = document.getElementById('model').value;
+            if (model.includes('Tesla')) basePrice = 45000;
+            else if (model.includes('BMW')) basePrice = 65000;
+            else if (model.includes('Toyota')) basePrice = 28000;
+            else if (model.includes('Mercedes')) basePrice = 95000;
+
+            let qty = parseInt(document.getElementById('quantity').value);
+            document.getElementById('qtyValue').textContent = qty;
+
+            let extra = 0;
+            if (document.getElementById('insurance').checked) extra += 500;
+            if (document.getElementById('delivery').checked) extra += 200;
+
+            const total = (basePrice + extra) * qty;
+            document.getElementById('total').value = total.toLocaleString();
+        }
+
+        document.getElementById('carForm').addEventListener('submit', e => {
+            e.preventDefault();
+            alert('Buyurtma qabul qilindi! Jami: ' + document.getElementById('total').value + ' $');
+        });
+
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', calculatePrice);
+        });
+    </script>
+</body>
+</html>
